@@ -8,19 +8,36 @@ import { CreateUserController } from './controllers/user/CreateUserController'
 import { AuthUserController } from './controllers/user/AuthUserController';
 import { UsersListController } from './controllers/user/UsersListController';
 import { DetailUserController } from './controllers/user/DetailUserController';
+import { PasswordUpdateController } from './controllers/user/PasswordUpdateController';
+import { CreateCategoryController } from './controllers/category/CreateCategoryController';
+import { CategoriesListController } from './controllers/category/CategoriesListController';
+import { CreateProductController } from './controllers/product/CreateProductController';
+import { ProductsListController } from './controllers/product/ProductsListController';
 
 const router = Router();
 
+
+//Rotas de USUÁRIOS
+
 router.post('/users', new CreateUserController().handle)
 router.post('/session', new AuthUserController().handle)
-// Esta rota deve ser privada
-router.get('/users', new UsersListController().handle)
+//Rotas privadas
+router.get('/users', isAuthenticated, new UsersListController().handle)
 router.get('/userinfo', isAuthenticated, new DetailUserController().handle)
+// Alterar senha
+router.post('/passwordUpdate', isAuthenticated, new PasswordUpdateController().handle)
 
+//Rotas de PRODUTOS
 
-// router.get('/teste', (req: Request, res: Response) => {
-//     // throw new Error("Erro ao fazer esta requisição");
-//     return res.json({ nome: "Sujeito Pizza!!!!" });
-// })
+//CATEGORIAS
+
+router.post('/category',isAuthenticated, new CreateCategoryController().handle)
+router.get('/categories', new CategoriesListController().handle)
+
+//PRODUTOS
+
+router.post('/product', isAuthenticated, new CreateProductController().handle)
+router.get('/products', new ProductsListController().handle)
+
 
 export { router };
