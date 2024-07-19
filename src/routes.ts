@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import multer from 'multer';
 
 //Middlewares
 import { isAuthenticated } from './middlewares/isAuthenticated';
@@ -9,12 +10,18 @@ import { AuthUserController } from './controllers/user/AuthUserController';
 import { UsersListController } from './controllers/user/UsersListController';
 import { DetailUserController } from './controllers/user/DetailUserController';
 import { PasswordUpdateController } from './controllers/user/PasswordUpdateController';
+
 import { CreateCategoryController } from './controllers/category/CreateCategoryController';
 import { CategoriesListController } from './controllers/category/CategoriesListController';
+
 import { CreateProductController } from './controllers/product/CreateProductController';
 import { ProductsListController } from './controllers/product/ProductsListController';
 
+import uploadConfig from './config/multer'
+
 const router = Router();
+
+const upload = multer(uploadConfig.upload('./tmp'));
 
 
 //Rotas de USUÁRIOS
@@ -31,12 +38,12 @@ router.post('/passwordUpdate', isAuthenticated, new PasswordUpdateController().h
 
 //CATEGORIAS
 
-router.post('/category',isAuthenticated, new CreateCategoryController().handle)
+router.post('/category', isAuthenticated, new CreateCategoryController().handle)
 router.get('/categories', new CategoriesListController().handle)
 
 //PRODUTOS
 
-router.post('/product', isAuthenticated, new CreateProductController().handle)
+router.post('/product', isAuthenticated,  upload.single('file'), new CreateProductController().handle)
 router.get('/products', new ProductsListController().handle)
 
 
